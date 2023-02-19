@@ -2,12 +2,14 @@ describe('login test', () => {
   it('login check', () => {
       cy.visit('http://localhost:3000/')  // URL
 
-      cy.get('#input-email').type('dummy@email.com')  // 適当なメールアドレスを渡す
-      cy.get('#input-password').type('asdfghjk')  // 適当なパスワードを渡す
+      cy.get('#login-email').type('dummy@email.com')  // 適当なメールアドレスを渡す
+      cy.get('#login-password').type('asdfghjk')  // 適当なパスワードを渡す
       cy.get('#submit').click()  // 登録ボタンを押す
-        if("#input-email".length <= 0){
+        if("#login-email".length == 0){
+          // 未入力の場合にエラーメッセージ
           cy.get('.error-message').should('have.text', 'ログインに失敗しました')
-        }else{
+        }else if("#login-email".length <= 1){
+          // 入力があればエラーメッセージなし
           cy.get('.error-message').should('have.text', '')
         }
   })
