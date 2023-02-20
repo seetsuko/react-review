@@ -5,7 +5,7 @@ function App() {
 
   return (
     <div>
-      <LogIn/>
+      <Login/>
     </div>
   )
 }
@@ -13,7 +13,7 @@ function App() {
 export default App;
 
 
-export const LogIn = () =>{
+export const Login = () =>{
 
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
@@ -35,17 +35,19 @@ export const LogIn = () =>{
       <p className='error-message'>{errorMessage}</p>
       <form onSubmit={handleSubmit} >
         <div id='test'>
-          <label for="login-email">メールアドレス</label>
+          <label htmlFor="login-email">メールアドレス</label>
           <input
             id="login-email" 
+            placeholder="login-email" 
             value={email} 
             onChange={(e) => setEmail(e.target.value)}/>
         </div>
         <div>
-        <label for="login-password">パスワード</label> 
+        <label htmlFor="login-password">パスワード</label> 
         <input 
           type="password" 
           id="login-password" 
+          placeholder="login-password" 
           value={password} 
           onChange={ (e) => setPassword(e.target.value)}/>
         </div>

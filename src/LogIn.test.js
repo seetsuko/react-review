@@ -1,18 +1,18 @@
 import { render, screen } from '@testing-library/react';
-
-import LogIn from './App';
+import Login from './App';
 
 
 describe("ログインコンポーネントテスト",()=>{
   
-  test("ラベルが存在するか",()=>{
-    render(<LogIn />);
+  test("要素が存在するか",()=>{
+    render(<Login />);
+    // ラベル
     screen.getByLabelText("メールアドレス");
-    screen.getByLabelText("パスワード");
-  });
-  test('入力フォームがあるか', () => {
-    render(<LogIn />);
-  // emailのみになっている
-  screen.getAllByRole('textbox')
+    screen.getByLabelText("パスワード")
+    // 入力フォーム
+    screen.getByPlaceholderText("login-email")
+    screen.getByPlaceholderText("login-password")
+    // ボタン
+    screen.getByRole("button")
 })
 })
