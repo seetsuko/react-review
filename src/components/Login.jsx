@@ -25,7 +25,7 @@ export const Login = () =>{
 
   return (
     <div>
-      <h1> ログイン</h1>
+      <h2> ログイン</h2>
       <p className='error-message'>{errorMessage}</p>
       <form onSubmit={handleSubmit} >
         <div id='test'>
