@@ -3,16 +3,14 @@ import { useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
+import Compressor from "compressorjs";
 
 export const Signup = () =>{
 
   // ユーザー情報作成APIを使って、ユーザー作成画面を作成する
-  
-  // 最近のスマホで撮影した写真などだと高画質でデータがとても大きいケースがあります。そのまま送ってしまうと重くなってしまう原因になってしまうのでサーバにアップロードする前にJavaScript側でリサイズしましょう。
-  // いくつかライブラリはありますがCompressor.jsあたりがいいかと思います。
-  
+
   const { register, handleSubmit, formState: {errors} } = useForm();
-  const [ iconUrl,setIconUrl ] = useState("")
+  const [ iconUrl,setIconUrl ] = useState("https://4.bp.blogspot.com/-xz7m7yMI-CI/U1T3vVaFfZI/AAAAAAAAfWI/TOJPmuapl-c/s800/figure_standing.png")
   const [ cookie,setCookie ] = useState("")
   const [ errorMessage,setErrorMessage ] = useState("")
   const navigate = useNavigate()
@@ -20,40 +18,51 @@ export const Signup = () =>{
   // 画像を表示できるようにする&Compressor.jsでリサイズ
   const handleIconChange = (e) =>{
     const iconFile = e.target.files[0];
-    const imageUrl = URL.createObjectURL(iconFile);
-    setIconUrl(imageUrl)
+    // 圧縮前のサイズ
+    console.log(iconFile.size)
 
-    const img = new Compressor(data,{
-      qualty: 0.6,
+    new Compressor(iconFile,{
+      qualty: 0.8,
+      mimeType: 'auto',
+      convertTypes: "image/jpeg",
       success(result){
-        //圧縮が完了した時の処理を記述する
+        // 圧縮後のサイズ
+        console.log(result.size);
+        const imageUrl = URL.createObjectURL(result);
+        setIconUrl(imageUrl)
       },
-      maxWidth:1000,
-      maxHeight: 400,
-      mimeType: 'image/png',
+      
       error(err) { 
-        //エラー処理 
+        console.log(err.message);
       },
 
     }) 
   }
 
-  const onSubmit = (data) => {
+
+  const onSubmit = async (data) => {
     console.log(data);
     axios
-    .post("https://ifrbzeaz2b.execute-api.ap-northeast-1.amazonaws.com/users",data)
-    .then((res)=>{
-      setCookie(res.data.token)
-      console.log(res.data.token)
-      navigate("/")
-    })
+      .post("https://ifrbzeaz2b.execute-api.ap-northeast-1.amazonaws.com/users",data)
+      .then((res)=>{
+        setCookie(res.data.token)
+        console.log("Token:"+res.data.token)
+        // navigate("/")
+      })
+      await axios
+      // アイコンのpostがうまくいかない
+      .post("https://ifrbzeaz2b.execute-api.ap-northeast-1.amazonaws.com/uploads",{iconUrl:iconUrl})
+      .then((res)=>
+      console.log(res)
+      )
       // エラー時のUIも実装するようにしましょう
-    .catch((err) => {
-      setErrorMessage(`サインアップに失敗しました。 ${err}`)
-    })
-    }
+      .catch((err) => {
+        setErrorMessage(`サインアップに失敗しました。 ${err}`)
+      })
+  }
 
-    
+  
+
 
   return (
     <div>
@@ -63,9 +72,12 @@ export const Signup = () =>{
       {/* ユーザアイコンも登録できるようにする */}
         <div>
           <div>
-            <img src={iconUrl} className="icon"/>
+            <img 
+              alt="アイコン画像" 
+              src={iconUrl} 
+              className="icon"/>
           </div>
-          <input type="file" onChange={handleIconChange}/>
+          <input type="file" onChange={handleIconChange }/>
         </div>
         <div >
           <label htmlFor="signup-name">ユーザー名</label>
