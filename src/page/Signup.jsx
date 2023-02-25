@@ -15,6 +15,8 @@ export const Signup = () =>{
   const [ errorMessage,setErrorMessage ] = useState("")
   const navigate = useNavigate()
 
+  axios.defaults.baseURL ="https://ifrbzeaz2b.execute-api.ap-northeast-1.amazonaws.com"
+
   // 画像を表示できるようにする&Compressor.jsでリサイズ
   const handleIconChange = (e) =>{
     const iconFile = e.target.files[0];
@@ -43,21 +45,23 @@ export const Signup = () =>{
   const onSubmit = async (data) => {
     console.log(data);
     axios
-      .post("https://ifrbzeaz2b.execute-api.ap-northeast-1.amazonaws.com/users",data)
+      .post("/users",data)
       .then((res)=>{
         setCookie(res.data.token)
         console.log("Token:"+res.data.token)
+        console.log(iconUrl)
         // navigate("/")
       })
       await axios
       // アイコンのpostがうまくいかない
-      .post("https://ifrbzeaz2b.execute-api.ap-northeast-1.amazonaws.com/uploads",{iconUrl:iconUrl})
+      .post("/uploads"
+      ,{iconUrl:iconUrl})
       .then((res)=>
       console.log(res)
       )
       // エラー時のUIも実装するようにしましょう
       .catch((err) => {
-        setErrorMessage(`サインアップに失敗しました。 ${err}`)
+        setErrorMessage(`登録に失敗しました。 ${err}`)
       })
   }
 
