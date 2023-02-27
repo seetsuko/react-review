@@ -1,32 +1,35 @@
-import "./Signup.css"
+import "./SignUp.css"
 import { useState } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import Compressor from "compressorjs";
+import { useDispatch, useSelector } from "react-redux";
+// import { logIn } from "../redux/authSlice"
 
-export const Signup = () =>{
-
-  // ユーザー情報作成APIを使って、ユーザー作成画面を作成する
-
+export const SignUp = () =>{
+  // useSlectorは状態にアクセスすること
+  // state(状態の).auth(storeのプロパティの).IsLogIN(value 今回はtokenを取得していること)
+  const auth = useSelector((state) =>state.auth.isLogIn)
+  // useDispatchはactionの通知をだすこと
+  const dispatch = useDispatch()
   const { register, handleSubmit, formState: {errors} } = useForm();
   const [ iconUrl,setIconUrl ] = useState("https://4.bp.blogspot.com/-xz7m7yMI-CI/U1T3vVaFfZI/AAAAAAAAfWI/TOJPmuapl-c/s800/figure_standing.png")
-  const [ cookie,setCookie ] = useState("")
+  // const [ cookie,setCookie ] = useState("")
   const [ errorMessage,setErrorMessage ] = useState("")
-  const navigate = useNavigate()
-
+  
+  
   axios.defaults.baseURL ="https://ifrbzeaz2b.execute-api.ap-northeast-1.amazonaws.com"
 
+  // handleIconChangeいらないっぽい？
   // 画像を表示できるようにする&Compressor.jsでリサイズ
   const handleIconChange = (e) =>{
     const iconFile = e.target.files[0];
-    // 圧縮前のサイズ
-    console.log(iconFile.size)
+  //   // 圧縮前のサイズ
+    console.log(iconFile)
 
     new Compressor(iconFile,{
-      qualty: 0.8,
-      mimeType: 'auto',
-      convertTypes: "image/jpeg",
+      qualty: 0.6,
       success(result){
         // 圧縮後のサイズ
         console.log(result.size);
@@ -37,7 +40,6 @@ export const Signup = () =>{
       error(err) { 
         console.log(err.message);
       },
-
     }) 
   }
 
@@ -47,22 +49,30 @@ export const Signup = () =>{
     axios
       .post("/users",data)
       .then((res)=>{
-        setCookie(res.data.token)
-        console.log("Token:"+res.data.token)
-        console.log(iconUrl)
-        // navigate("/")
-      })
-      await axios
+        console.log(res.data.token)
+        // actionをreducerに「状態を更新してくださいね」と通知する→今回はログイン状態にする
+        dispatch(logIn())
+        
+      }) 
+      // await axios
       // アイコンのpostがうまくいかない
-      .post("/uploads"
-      ,{iconUrl:iconUrl})
-      .then((res)=>
-      console.log(res)
-      )
+      // .post("/uploads",data,
+      //   {headers:{ 
+      //     "Content-Type": 'application/json',
+      //     "Authorization":`Bearer ${cookie}`
+      //     },
+      //     formData:{
+      //     "icon":iconUrl}
+      //   })
+      // .then((res)=>
+      // console.log(res)
+      // )
       // エラー時のUIも実装するようにしましょう
       .catch((err) => {
         setErrorMessage(`登録に失敗しました。 ${err}`)
       })
+      // もしtokenを取得しているならUserHome画面へ遷移
+      if (auth) return<Navigate to="/"/>
   }
 
   
@@ -116,7 +126,7 @@ export const Signup = () =>{
         </div>
         </form>
          {/* ログイン画面へのリンクを配置する */}
-        <NavLink to="/login">ログイン画面へ</NavLink>
+        <Link to="/login">ログイン画面へ</Link>
     </div>
   )
 }

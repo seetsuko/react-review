@@ -1,20 +1,21 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link,Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+// import { logIn } from "../redux/authSlice"
 
-export const Login = () =>{
+
+export const LogIn = () =>{
 
 //   ユーザー認証APIを使って、ログイン画面を作成する
-// ユーザー作成画面へのリンクを配置する
-// エラー時のUIも実装するようにしましょう
-// バリデーションを実装する
 
+  const auth = useSelector((state)=>state.auth.isLogIn)
+  const dispatch = useDispatch()
+  // バリデーションを実装する
   const { register, handleSubmit, formState: {errors} } = useForm();
   const [ errorMessage,setErrorMessage] = useState("");
-  const [ cookie, setCookie ] = useState("")
-  const navigate = useNavigate()
+  // const [ cookie, setCookie ] = useState("")
 
   axios.defaults.baseURL ="https://ifrbzeaz2b.execute-api.ap-northeast-1.amazonaws.com"
 
@@ -25,13 +26,16 @@ export const Login = () =>{
       .then((res) => {
         // 認証トークン
         console.log("token", res.data.token)
-        setCookie("token", res.data.token);
-        navigate("/");
+        dispatch(logIn())
+        // setCookie("token", res.data.token);
       })
+      // エラー時のUIも実装するようにしましょう
       .catch((err) => {
         setErrorMessage(`ログインに失敗しました。${err}`);
       });
+      if (auth) return <Navigate to="/"/>
   }
+  
 
 
   return (
@@ -62,7 +66,7 @@ export const Login = () =>{
         </div>
         </form>
         {/* ユーザー作成画面へのリンクを配置する */}
-        <NavLink to="/signup">ユーザー新規登録</NavLink>
+        <Link to="/signup">ユーザー新規登録</Link>
     </div>
   )
 }
