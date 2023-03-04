@@ -1,82 +1,68 @@
 import "./SignUp.css"
 import { useState } from "react";
+import { url } from "../const"
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { Navigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Compressor from "compressorjs";
-import { useDispatch, useSelector } from "react-redux";
-// import { logIn } from "../redux/authSlice"
+import useCookies from "react-cookie/cjs/useCookies";
+
 
 export const SignUp = () =>{
-  // useSlectorは状態にアクセスすること
-  // state(状態の).auth(storeのプロパティの).IsLogIN(value 今回はtokenを取得していること)
-  const auth = useSelector((state) =>state.auth.isLogIn)
-  // useDispatchはactionの通知をだすこと
-  const dispatch = useDispatch()
+  const formData = new FormData()
+  const navigation = useNavigate()
   const { register, handleSubmit, formState: {errors} } = useForm();
-  const [ iconUrl,setIconUrl ] = useState("https://4.bp.blogspot.com/-xz7m7yMI-CI/U1T3vVaFfZI/AAAAAAAAfWI/TOJPmuapl-c/s800/figure_standing.png")
-  // const [ cookie,setCookie ] = useState("")
+  const [ file,setFile ] = useState("")
+  const [ preview,setPreview ] = useState("https://4.bp.blogspot.com/-xz7m7yMI-CI/U1T3vVaFfZI/AAAAAAAAfWI/TOJPmuapl-c/s800/figure_standing.png")
+  const [ cookie,setCookie,remouveCookie ] = useCookies()
   const [ errorMessage,setErrorMessage ] = useState("")
-  
-  
-  axios.defaults.baseURL ="https://ifrbzeaz2b.execute-api.ap-northeast-1.amazonaws.com"
 
-  // handleIconChangeいらないっぽい？
-  // 画像を表示できるようにする&Compressor.jsでリサイズ
-  const handleIconChange = (e) =>{
-    const iconFile = e.target.files[0];
-  //   // 圧縮前のサイズ
-    console.log(iconFile)
+  
+  // 画像を圧縮して確認できるようにする
+  const handleIconChange = (e) => {
 
-    new Compressor(iconFile,{
+    new Compressor(e.target.files[0],{
       qualty: 0.6,
       success(result){
-        // 圧縮後のサイズ
-        console.log(result.size);
+        console.log(result);
+        setFile(result)
         const imageUrl = URL.createObjectURL(result);
-        setIconUrl(imageUrl)
-      },
-      
-      error(err) { 
-        console.log(err.message);
-      },
-    }) 
+        setPreview(imageUrl)
+      }
+    })
   }
-
 
   const onSubmit = async (data) => {
-    console.log(data);
-    axios
-      .post("/users",data)
+    let token = ""
+    await axios
+      .post(`${url}/users`,data)
       .then((res)=>{
-        console.log(res.data.token)
-        // actionをreducerに「状態を更新してくださいね」と通知する→今回はログイン状態にする
-        dispatch(logIn())
-        
-      }) 
-      // await axios
-      // アイコンのpostがうまくいかない
-      // .post("/uploads",data,
-      //   {headers:{ 
-      //     "Content-Type": 'application/json',
-      //     "Authorization":`Bearer ${cookie}`
-      //     },
-      //     formData:{
-      //     "icon":iconUrl}
-      //   })
-      // .then((res)=>
-      // console.log(res)
-      // )
-      // エラー時のUIも実装するようにしましょう
-      .catch((err) => {
-        setErrorMessage(`登録に失敗しました。 ${err}`)
+        console.log(res)
+        token = res.data.token
+        setCookie("token",token)
       })
-      // もしtokenを取得しているならUserHome画面へ遷移
-      if (auth) return<Navigate to="/"/>
+      .catch((err) => {
+        setErrorMessage(`ユーザー登録に失敗しました。 ${err}`)
+      })
+      // アイコンPOST 
+    formData.append("icon",file)
+    await axios
+      .post(`${url}/uploads`,formData,
+        {headers: {
+            "Content-Type": 'multipart/form-data',
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        // UserHomeページへ遷移
+        navigation("/")
+      })
+      .catch((err) => {
+      setErrorMessage(`アイコン登録に失敗しました。 ${err}`)
+      })
   }
-
-  
-
 
   return (
     <div>
@@ -86,12 +72,16 @@ export const SignUp = () =>{
       {/* ユーザアイコンも登録できるようにする */}
         <div>
           <div>
+            {/* アイコン画像の確認 */}
             <img 
               alt="アイコン画像" 
-              src={iconUrl} 
+              src={preview} 
               className="icon"/>
           </div>
-          <input type="file" onChange={handleIconChange }/>
+          <input 
+            type="file" 
+            accept="image/png, image/jpg"
+            onChange={handleIconChange}/>
         </div>
         <div >
           <label htmlFor="signup-name">ユーザー名</label>

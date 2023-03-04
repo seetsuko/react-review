@@ -1,39 +1,34 @@
 import { useState } from 'react';
-import { Link,Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-// import { logIn } from "../redux/authSlice"
+import { url } from "../const"
+import useCookies from "react-cookie/cjs/useCookies";
+
 
 
 export const LogIn = () =>{
 
-//   ユーザー認証APIを使って、ログイン画面を作成する
-
-  const auth = useSelector((state)=>state.auth.isLogIn)
-  const dispatch = useDispatch()
-  // バリデーションを実装する
+  const navigation = useNavigate()
   const { register, handleSubmit, formState: {errors} } = useForm();
+  const [ cookie,setCookie,remouveCookie ] = useCookies()
   const [ errorMessage,setErrorMessage] = useState("");
-  // const [ cookie, setCookie ] = useState("")
-
-  axios.defaults.baseURL ="https://ifrbzeaz2b.execute-api.ap-northeast-1.amazonaws.com"
 
   const onSubmit = (data) =>{
     console.log(data)
+    //   ユーザー認証APIを使って、ログイン画面を作成する
     axios
-      .post("/signin", data)
+      .post(`${url}/signin`, data)
       .then((res) => {
-        // 認証トークン
-        console.log("token", res.data.token)
-        dispatch(logIn())
-        // setCookie("token", res.data.token);
+        console.log(res.data.token)
+        setCookie("token",res.data.token)
+        // UserHomeページへ遷移
+        navigation("/")
       })
       // エラー時のUIも実装するようにしましょう
       .catch((err) => {
         setErrorMessage(`ログインに失敗しました。${err}`);
       });
-      if (auth) return <Navigate to="/"/>
   }
   
 
