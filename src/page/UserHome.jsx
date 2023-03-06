@@ -4,20 +4,24 @@ import { useEffect, useState } from "react"
 import { url } from "../const";
 import { useCookies } from 'react-cookie';
 import { Pagination } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { pageQuery } from "../redux/paginationSlice";
+
 
 export const UserHome = () =>{
 
+  const pagination = useSelector((state) => state.pagination.offset)
+  const dispatch = useDispatch()
   const [ cookie ] = useCookies()
   const [ bookData,setBookData ] = useState([]);
-  const [ queryNumber,setQueryNumber ] = useState(0)
   const [ errorMessage,setErrorMessage ] = useState("")
 
   console.log(cookie.token)
 
-  // offsetのstateが変更するたびにAPIを叩く
+  // paginationが変更するたびにAPIを叩く
   useEffect(()=>{  
     axios 
-    .get(`${url}/books?offset=${queryNumber}`, {
+    .get(`${url}/books?offset=${pagination}`, {
       headers: {
       "Authorization": `Bearer ${cookie.token}`,
     },
@@ -28,21 +32,20 @@ export const UserHome = () =>{
         setErrorMessage("レビューがありません")
         setBookData([])
       }else{
-      console.log(res.data)
+      // console.log(res.data)
       setBookData(res.data)
-      // console.log(queryNumber)
+      // console.log(pagination)
       setErrorMessage("")
       }
     })
     .catch(err => {
       console.log("err:", err);
     });
-  },[queryNumber])
+  },[pagination])
 
 // ページが変わるとoffsetのstateが変わる
 const handlePaginate = (page) =>{
-  const pageNumber = page
-  setQueryNumber((pageNumber-1)*10)
+  dispatch(pageQuery(page))
 }
 
 return(
@@ -62,6 +65,7 @@ return(
         }}  
         className="paginate"
       />
+
     <p>{errorMessage}</p>
       <ul className="review-list">
         {bookData.map((data) => {

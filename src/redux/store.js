@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 // authSlicer→authReducerはわかりやすいように名前変えてるだけ
-import authReducer from "./authSlice";
+import paginationReducer from "./paginationSlice";
 
 // storeは状態のこと。どの状態を保持しているか管理する
 export const store = configureStore({
   // state状態を更新するための裏側の仕組み
   reducer: {
     // 状態の名前：スライス名
-    auth: authReducer,
+    pagination: paginationReducer
   },
 })
 
