@@ -1,0 +1,40 @@
+header{
+  padding: 5px 10px;
+  background-color: rgb(144, 176, 235);
+  display: flex;
+  justify-content: space-between
+}
+
+.user{
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  width: 200px;
+  justify-content: space-between;
+}
+.login-status{
+  display: flex;
+  margin-right: 30px;
+}
+.login-status img{
+  height: 50px;
+  border: solid 1px;
+  border-radius: 50px;
+  margin-right: 8px;
+}
+.login-status p{
+  font-size: 18px;
+}
+.edit{
+  font-size: 14px;
+}
+.btn button{
+  height: 30px;
+  width: 80px;
+  border-radius: 8px;
+  background-color: blue;
+  color:whitesmoke;
+  font-size: 12px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

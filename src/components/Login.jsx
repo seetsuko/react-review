@@ -1,15 +1,19 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { url } from "../const"
 import useCookies from "react-cookie/cjs/useCookies";
-
+import { useDispatch,useSelector } from 'react-redux';
+import { signIn } from '../redux/authSlice';
+import { Header } from '../page/Header';
 
 
 export const LogIn = () =>{
 
+  const auth = useSelector((state) => state.auth.isSignIn)
   const navigation = useNavigate()
+  const dispatch = useDispatch()
   const { register, handleSubmit, formState: {errors} } = useForm();
   const [ cookie,setCookie,remouveCookie ] = useCookies()
   const [ errorMessage,setErrorMessage] = useState("");
@@ -22,6 +26,7 @@ export const LogIn = () =>{
       .then((res) => {
         console.log(res.data.token)
         setCookie("token",res.data.token)
+        dispatch(signIn())
         // UserHomeページへ遷移
         navigation("/")
       })
@@ -35,6 +40,8 @@ export const LogIn = () =>{
 
   return (
     <div>
+      { auth && <Navigate to ="/"/> }
+      <Header/>
       <h2> ログイン</h2>
       <p className='error-message'>{errorMessage}</p>
       <form onSubmit={handleSubmit(onSubmit)} >

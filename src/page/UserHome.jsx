@@ -6,6 +6,7 @@ import { useCookies } from 'react-cookie';
 import { Pagination } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { pageQuery } from "../redux/paginationSlice";
+import { Header } from "./Header";
 
 
 export const UserHome = () =>{
@@ -16,7 +17,7 @@ export const UserHome = () =>{
   const [ bookData,setBookData ] = useState([]);
   const [ errorMessage,setErrorMessage ] = useState("")
 
-  console.log(cookie.token)
+  // console.log(cookie.token)
 
   // paginationが変更するたびにAPIを叩く
   useEffect(()=>{  
@@ -39,7 +40,7 @@ export const UserHome = () =>{
       }
     })
     .catch(err => {
-      console.log("err:", err);
+      setErrorMessage(`${err.message},${err.code}`)
     });
   },[pagination])
 
@@ -50,6 +51,7 @@ const handlePaginate = (page) =>{
 
 return(
   <div className="main">
+    <Header/>
     <div className="title">
       <h2 className="title__main">書籍一覧</h2>
       <p className="title__sub">書籍レビューの一覧です</p>

@@ -3,18 +3,24 @@ import { useState } from "react";
 import { url } from "../const"
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link,Navigate, useNavigate } from "react-router-dom";
 import Compressor from "compressorjs";
 import useCookies from "react-cookie/cjs/useCookies";
+import { Header } from '../page/Header';
+import { useDispatch, useSelector } from "react-redux";
+import { signIn } from "../redux/authSlice";
 
 
 export const SignUp = () =>{
+
+  const auth = useSelector((state) => state.auth.isSignIn)
+  const dispatch = useDispatch()
   const formData = new FormData()
   const navigation = useNavigate()
   const { register, handleSubmit, formState: {errors} } = useForm();
   const [ file,setFile ] = useState("")
   const [ preview,setPreview ] = useState("https://4.bp.blogspot.com/-xz7m7yMI-CI/U1T3vVaFfZI/AAAAAAAAfWI/TOJPmuapl-c/s800/figure_standing.png")
-  const [ cookie,setCookie,remouveCookie ] = useCookies()
+  const [ cookie,setCookie,removeCookie ] = useCookies()
   const [ errorMessage,setErrorMessage ] = useState("")
 
   
@@ -26,6 +32,7 @@ export const SignUp = () =>{
       success(result){
         console.log(result);
         setFile(result)
+        // プレビュー
         const imageUrl = URL.createObjectURL(result);
         setPreview(imageUrl)
       }
@@ -34,6 +41,7 @@ export const SignUp = () =>{
 
   const onSubmit = async (data) => {
     let token = ""
+    // ユーザー情報をpost
     await axios
       .post(`${url}/users`,data)
       .then((res)=>{
@@ -56,6 +64,7 @@ export const SignUp = () =>{
       )
       .then((res) => {
         console.log(res);
+        dispatch(signIn())
         // UserHomeページへ遷移
         navigation("/")
       })
@@ -66,6 +75,8 @@ export const SignUp = () =>{
 
   return (
     <div>
+      { auth && <Navigate to ="/"/> }
+      <Header/>
       <h2> 新規登録</h2>
       <p className='error-message'>{errorMessage}</p>
       <form onSubmit={ handleSubmit(onSubmit) } >

@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 // グローバルで共有するためにstoreをインポートする
 import { store } from "./redux/store";
 import { CookiesProvider } from 'react-cookie';
+import { BrowserRouter } from 'react-router-dom';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -15,7 +16,9 @@ root.render(
     {/* providerでAppを囲んで、App全体につかえるようにする */}
     <Provider store={store}>
       <CookiesProvider>
+        <BrowserRouter>
         <App />
+        </BrowserRouter>
       </CookiesProvider>
     </Provider>
   </React.StrictMode>
