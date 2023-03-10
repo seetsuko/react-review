@@ -5,20 +5,26 @@ import { useCookies } from "react-cookie"
 import { url } from "../const"
 import { useDispatch, useSelector } from "react-redux"
 import { signOut } from "../redux/authSlice"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 
 export const Header = () =>{
 
   const auth = useSelector((state) => state.auth.isSignIn)
+  const location = useLocation()
   const dispatch = useDispatch()
   const navigation = useNavigate()
   const [ cookie,setCookie,removeCookie ] = useCookies()
   const [ iconUrl,setIconUrl ] = useState()
   const [ userName,setUserName ] = useState()
+  const home = (location.pathname == "/")
 
   const handleSignOut = () =>{
     dispatch(signOut())
     removeCookie("token")
+    navigation("/login")
+  }
+
+  const handleSignIn = () =>{
     navigation("/login")
   }
 
@@ -53,7 +59,7 @@ export const Header = () =>{
                 </div>
                 <div className="btn">
                     <button onClick={handleSignOut}>ログアウト</button>
-                    <Link to="/profile" className="edit">ユーザー編集</Link>
+                    {home && <Link to="/profile" className="edit">ユーザー編集</Link>}
                 </div>
               </div>
             )
@@ -62,7 +68,7 @@ export const Header = () =>{
                 <div className="login-status">
                 </div>
                 <div className="btn">
-                  <button>ログイン</button>
+                  <button onClick={handleSignIn}>ログイン</button>
                 </div>
               </div>
             )
