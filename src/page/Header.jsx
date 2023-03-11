@@ -48,7 +48,7 @@ export const Header = () =>{
 
   return(
     <header>
-      <h1>書籍レビューアプリ</h1>
+      <Link to="/"><h1>書籍レビューアプリ</h1></Link>
       
           {auth 
             ?( 

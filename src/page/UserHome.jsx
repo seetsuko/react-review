@@ -11,6 +11,7 @@ import { Header } from "./Header";
 
 export const UserHome = () =>{
 
+  const auth = useSelector((state) => state.auth.isSignIn)
   const pagination = useSelector((state) => state.pagination.offset)
   const dispatch = useDispatch()
   const [ cookie ] = useCookies()
@@ -19,29 +20,50 @@ export const UserHome = () =>{
 
   // console.log(cookie.token)
 
+  
+
   // paginationが変更するたびにAPIを叩く
-  useEffect(()=>{  
-    axios 
-    .get(`${url}/books?offset=${pagination}`, {
-      headers: {
-      "Authorization": `Bearer ${cookie.token}`,
-    },
-  })
-    .then((res)=>{
-      // レビューが無かったらメッセージを出す
-      if(res.data.length === 0){
-        setErrorMessage("レビューがありません")
-        setBookData([])
-      }else{
-      // console.log(res.data)
-      setBookData(res.data)
-      // console.log(pagination)
-      setErrorMessage("")
-      }
-    })
-    .catch(err => {
-      setErrorMessage(`${err.message},${err.code}`)
-    });
+  useEffect(()=>{
+    // ログイン状態のAPI
+    if(auth == true){
+      axios 
+      .get(`${url}/books?offset=${pagination}`, {
+        headers: {
+        "Authorization": `Bearer ${cookie.token}`,
+        },
+      })
+      .then((res)=>{
+        // レビューが無かったらメッセージを出す
+        if(res.data.length === 0){
+          setErrorMessage("レビューがありません")
+          setBookData([])
+        }else{
+        // console.log(res.data)
+        setBookData(res.data)
+        // console.log(pagination)
+        setErrorMessage("")
+        }
+      })
+      .catch(err => {
+        setErrorMessage(`${err.message},${err.code}`)
+      });
+    // ログアウト状態のAPI
+    }else{
+      axios 
+      .get(`${url}/public/books?offset=${pagination}`)
+      .then((res)=>{
+        if(res.data.length === 0){
+          setErrorMessage("レビューがありません")
+          setBookData([])
+        }else{
+        setBookData(res.data)
+        setErrorMessage("")
+        }
+      })
+      .catch(err => {
+        setErrorMessage(`${err.message},${err.code}`)
+      });
+    }
   },[pagination])
 
 // ページが変わるとoffsetのstateが変わる

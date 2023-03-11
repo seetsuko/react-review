@@ -5,17 +5,21 @@ import { useState,useEffect } from "react"
 import axios from "axios"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
+import Compressor from "compressorjs";
+
 
 
 export const UserEdit = () => {
 
+  const formData = new FormData()
   const navigation = useNavigate() 
   const [ cookie ] = useCookies()
-  const [ userName,setUserName ] = useState("")
-  const { register, handleSubmit,formState: {errors} } = useForm()
+  const { register, handleSubmit,reset,formState: {errors} } = useForm()
+  const [ preview,setPreview ] = useState("")
+  const [ file,setFile ] = useState("")
   const [ errorMessage,setErrorMessage ] = useState("") 
 
-  // 表示用API
+  // ユーザ表示用API
   useEffect(()=>{
     axios
       .get(`${url}/users`,
@@ -24,21 +28,54 @@ export const UserEdit = () => {
         }}
       )
       .then((res)=>{
-        setUserName(res.data.name)
+        reset({"name":res.data.name})
+        setPreview(res.data.iconUrl)
       })
       .catch((err)=>{
         console.log(err)
       })
   },[])
 
-  const onSubmit = (data) =>{
-    axios
+  // 画像を圧縮して確認できるようにする
+  const handleIconChange = (e) => {
+
+    new Compressor(e.target.files[0],{
+      qualty: 0.6,
+      success(result){
+        console.log(result);
+        setFile(result)
+        // プレビュー
+        const imageUrl = URL.createObjectURL(result);
+        setPreview(imageUrl)
+      }
+    })
+  }
+
+
+  const onSubmit = async (data) =>{
+    // ユーザ名更新用API
+    await axios
       .put(`${url}/users`,data,
         {headers: {
         "Authorization": `Bearer ${cookie.token}`,
       }}
       )
       .then((res)=>{
+      })
+      
+      // アイコンPOST 
+    formData.append("icon",file)
+    await axios
+      .post(`${url}/uploads`,formData,
+        {headers: {
+            "Content-Type": 'multipart/form-data',
+            "Authorization": `Bearer ${cookie.token}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        // UserHomeページへ遷移
         navigation("/")
       })
       .catch((err)=>{
@@ -50,15 +87,27 @@ export const UserEdit = () => {
     <div>
       <Header/>
       <h2>ユーザー編集</h2>
+      <p>{errorMessage}</p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
+          <div>
+            {/* アイコン画像の確認 */}
+            <img 
+              alt="アイコン画像" 
+              src={preview} 
+              className="icon"/>
+          </div>
+          <input 
+            type="file" 
+            accept="image/png, image/jpg"
+            onChange={handleIconChange}/>
+        </div>
           <label>ユーザ名</label>
           <input 
           type="text" 
-          defaultValue={userName}
-          {...register("name",{required:true})}/>
-          {errors.name && <div>ユーザー名を変更してください</div>}
-        </div>
+          {...register("name",{required:true})}
+          />
+          {errors.name && <div>ユーザー名を入力してください</div>}
         <div>
           <button type="submit">登録</button>
         </div>
