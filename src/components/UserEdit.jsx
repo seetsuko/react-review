@@ -53,28 +53,29 @@ export const UserEdit = () => {
 
 
   const onSubmit = async (data) =>{
-    // ユーザ名更新用API
-    await axios
+      // アイコンPOST 
+    if(file !== ""){
+      formData.append("icon",file)
+      await axios
+        .post(`${url}/uploads`,formData,
+          {headers: {
+              "Content-Type": 'multipart/form-data',
+              "Authorization": `Bearer ${cookie.token}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        })
+    }
+      // ユーザ名更新用API
+      await axios
       .put(`${url}/users`,data,
         {headers: {
         "Authorization": `Bearer ${cookie.token}`,
       }}
       )
       .then((res)=>{
-      })
-      
-      // アイコンPOST 
-    formData.append("icon",file)
-    await axios
-      .post(`${url}/uploads`,formData,
-        {headers: {
-            "Content-Type": 'multipart/form-data',
-            "Authorization": `Bearer ${cookie.token}`,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
         // UserHomeページへ遷移
         navigation("/")
       })

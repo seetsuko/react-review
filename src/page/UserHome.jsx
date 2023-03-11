@@ -7,6 +7,7 @@ import { Pagination } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { pageQuery } from "../redux/paginationSlice";
 import { Header } from "./Header";
+import { Link } from "react-router-dom";
 
 
 export const UserHome = () =>{
@@ -89,8 +90,10 @@ return(
         }}  
         className="paginate"
       />
-
-    <p>{errorMessage}</p>
+      <div className="create-btn">
+        <Link to="new" className="create-btn__link">レビューを書く</Link>
+      </div>
+      <p>{errorMessage}</p>
       <ul className="review-list">
         {bookData.map((data) => {
           return(

@@ -6,7 +6,19 @@
   width: fit-content;
   margin: 0 auto;
 }
-
+.create-btn{
+  text-align: center;
+  margin-top: 16px;
+} 
+.create-btn__link{
+  text-decoration: none;
+  color: aliceblue;
+  background-color:lightcoral ;
+  border-radius: 10px;
+  padding: 5px;
+  border: solid 1px gray;
+  
+}
 .review-item{
   list-style: none;
   background-color: lightgoldenrodyellow;
