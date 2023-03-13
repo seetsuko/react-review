@@ -4,6 +4,7 @@ import { SignUp } from "../components/SignUp"
 import { UserHome } from '../page/UserHome'
 import { UserEdit } from "../components/UserEdit"
 import { NewReview } from "../page/NewReview"
+import { DetailReview } from "../page/DetailReview"
 
 export const Router = () =>{
 
@@ -14,6 +15,7 @@ export const Router = () =>{
         <Route path="/" element={<UserHome />} />
         <Route path="/profile" element={<UserEdit />} />
         <Route path="/new" element={<NewReview />} />
+        <Route path="/detail/:id" element={<DetailReview />} />
       </Routes>
   )
 }

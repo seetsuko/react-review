@@ -98,7 +98,7 @@ return(
         {bookData.map((data) => {
           return(
           <li className="review-item" key={data.id}>
-            <p className="review-item__text">{data.title}</p>
+            <Link to={`/detail/${data.id}`} state={{reviewData:data}}><p className="review-item__text">{data.title}</p></Link>
             <p className="review-item__text--detail">{data.review}</p>
           </li>
           )
