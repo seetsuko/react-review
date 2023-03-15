@@ -3,37 +3,55 @@ import axios from "axios"
 import "./DetailReview.css"
 import { useEffect, useState } from "react"
 import { useCookies } from "react-cookie"
-import { useLocation } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { url } from "../const"
 import { Header } from "./Header"
+import { useSelector } from "react-redux"
 
 export const DetailReview = () => {
   
+    const auth = useSelector((state) => state.auth.isSignIn)
     const { state } = useLocation()
     const [ cookie ] = useCookies()
-    const reviewData = state.reviewData
-    const [ iconUrl,setIconUrl ] = useState()
+    const reviewID = state.reviewID
+    const [ reviewData,setReviewData ] = useState()
     const [ userName,setUserName ] = useState()
     const [ load,setLoad ] = useState(true)
   
-    console.log(reviewData)
-  
+    console.log(reviewID)
+
     useEffect(()=>{
+      // 投稿者かどうかのためにユーザーのAPIを取得
       axios
-        .get(`${url}/users`,
-          {headers: {
+        .get(`${url}/users`,{
+          headers: {
             "Authorization": `Bearer ${cookie.token}`,
-          }}
-        )
+            },
+        })
         .then((res)=>{
-          console.log(res.data)
-          setIconUrl(res.data.iconUrl)
           setUserName(res.data.name)
-          setLoad(false)
         })
-        .catch((err)=>{
-          console.log(err)
-        })
+      // 1秒後にAPIを叩く
+      setTimeout(() => {
+      if(auth == true){
+        axios
+          .get(`${url}/books/${reviewID}`,{
+            headers: {
+              "Authorization": `Bearer ${cookie.token}`,
+              },
+          })
+          .then((res)=>{
+            setReviewData(res.data)
+            setLoad(false)
+          })
+          .catch((err)=>{
+            console.log(err)
+          })
+      }else{
+        setLoad(false)
+      }
+    },1000)
+    clearInterval;
     },[])
 
     
@@ -42,11 +60,15 @@ export const DetailReview = () => {
       <div className="main">
         <Header/>
         <h2>書籍レビュー詳細</h2>
-        { load 
+        { load //ローディング中
           ? <div className="loading">
               <div className="dot-pulse"></div>
             </div>
-          : <div className="container">
+          
+          : auth //ローディング終了後。ログインしているとき
+          ?<div className="container">
+            {/* 投稿者の場合は表示 */}
+            {userName === reviewData.reviewer && <Link to={`/edit/${reviewID}`} state={{reviewID:reviewID}}>投稿内容を編集する</Link>} 
             <div className="item">
               <h3>タイトル</h3>
                 <p>{reviewData.title}</p>
@@ -63,11 +85,13 @@ export const DetailReview = () => {
               <h3>感想</h3>
                 <p>{reviewData.review}</p>
             </div>
-              <div className="review-user">
-                <img src={iconUrl} alt="アイコン画像" className="icon"/>
-                <p>{userName}</p>
-              </div>
-            </div> }
+            <div className="item">
+              <h3>投稿者</h3>
+                <p>{reviewData.reviewer} さん</p>
+            </div>
+          </div>
+          // ログインしていないとき
+          :<p>詳細を見るにはログインが必要です。</p>} 
       </div>
     )
   }

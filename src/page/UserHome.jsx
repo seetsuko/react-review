@@ -90,15 +90,16 @@ return(
         }}  
         className="paginate"
       />
+      {auth && 
       <div className="create-btn">
         <Link to="new" className="create-btn__link">レビューを書く</Link>
-      </div>
+      </div>}
       <p>{errorMessage}</p>
       <ul className="review-list">
         {bookData.map((data) => {
           return(
           <li className="review-item" key={data.id}>
-            <Link to={`/detail/${data.id}`} state={{reviewData:data}}><p className="review-item__text">{data.title}</p></Link>
+            <Link to={`/detail/${data.id}`} state={{reviewID:data.id}}><p className="review-item__text">{data.title}</p></Link>
             <p className="review-item__text--detail">{data.review}</p>
           </li>
           )

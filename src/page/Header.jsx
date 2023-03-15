@@ -29,6 +29,7 @@ export const Header = () =>{
   }
 
   useEffect(()=>{
+    if(auth == true){
     axios
       .get(`${url}/users`,
         {headers: {
@@ -43,6 +44,7 @@ export const Header = () =>{
       .catch((err)=>{
         console.log(err)
       })
+    }
   },[])
 
 
