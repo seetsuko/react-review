@@ -49,10 +49,13 @@ export const EditReview = () => {
       .catch((err)=>{
         setErrorMessage("編集に失敗しました")
       })
-
   }
 
   const handleDelete = () =>{
+  if(window.confirm("削除しますか？")){
+
+  
+  
     axios
       .delete(`${url}/books/${reviewID}`,{
         headers: {
@@ -66,6 +69,7 @@ export const EditReview = () => {
       .catch((err)=>{
         setErrorMessage("削除に失敗しました")
       })
+    }
   }
 
   return(
@@ -73,7 +77,7 @@ export const EditReview = () => {
       <Header/>
       <h2>レビュー編集画面</h2>
       <div>
-        <p  className='error-message'>{errorMessage}</p>
+        <p  className="error">{errorMessage}</p>
         <form onSubmit={handleSubmit(onSubmit)} >
           <div>
             <label>タイトル</label>
@@ -81,7 +85,7 @@ export const EditReview = () => {
               type="text"
               {...register("title",{required:true})}
             />
-            {errors.title && <div>タイトルを入力してください</div>}
+            {errors.title && <div className="error">タイトルを入力してください</div>}
           </div>
           <div>
             <label>URL</label>
@@ -89,7 +93,7 @@ export const EditReview = () => {
               type="text"
               {...register("url",{required:true})}
             />
-            {errors.url && <div>URLを入力してください</div>}
+            {errors.url && <div className="error">URLを入力してください</div>}
           </div>
           <div>
             <label>書籍の詳細</label>
@@ -97,7 +101,7 @@ export const EditReview = () => {
               type="text"
               {...register("detail",{required:true})}
             />
-            {errors.detail && <div>書籍の詳細を入力してください</div>}
+            {errors.detail && <div className="error">書籍の詳細を入力してください</div>}
           </div>
           <div>
             <label>レビュー</label>
@@ -105,14 +109,14 @@ export const EditReview = () => {
               type="text"
               {...register("review",{required:true})}
             />
-            {errors.review && <div>レビューを入力してください</div>}
+            {errors.review && <div className="error">レビューを入力してください</div>}
           </div>
           <div>
           <button id='review-submit' type="submit">編集する</button>
           </div>
         </form>
         <div className="delete-btn">
-          <button id='delete-btn' onClick={handleDelete}>削除する</button>
+          <button id='delete-btn' className="error" onClick={handleDelete}>削除する</button>
         </div>
       </div>
     </div>

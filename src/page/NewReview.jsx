@@ -1,4 +1,5 @@
 import axios from "axios"
+import "./NewReview.css"
 import { useState } from "react"
 import { useCookies } from "react-cookie"
 import { useForm } from "react-hook-form"
@@ -40,46 +41,50 @@ export const NewReview = () =>{
       <h2>レビュー投稿画面</h2>
       {auth 
       ?<div>
-        <p  className='error-message'>{errorMessage}</p>
-        <form onSubmit={handleSubmit(onSubmit)} >
+        <p  className="error">{errorMessage}</p>
+        <form onSubmit={handleSubmit(onSubmit)} className="container">
           <div>
-            <label>タイトル</label>
+            <label>タイトル</label><br/>
             <input 
+              className="input-title"
               type="text"
               {...register("title",{required:true})}
             />
-            {errors.title && <div>タイトルを入力してください</div>}
+            {errors.title && <div className="error">タイトルを入力してください</div>}
           </div>
           <div>
-            <label>URL</label>
+            <label>URL</label><br/>
             <input 
+              className="input-url"
               type="text"
               {...register("url",{required:true})}
             />
-            {errors.url && <div>URLを入力してください</div>}
+            {errors.url && <div className="error">URLを入力してください</div>}
           </div>
           <div>
-            <label>書籍の詳細</label>
+            <label>書籍の詳細</label><br/>
             <input 
+              className="input-detail"
               type="text"
               {...register("detail",{required:true})}
             />
-            {errors.detail && <div>書籍の詳細を入力してください</div>}
+            {errors.detail && <div className="error">書籍の詳細を入力してください</div>}
           </div>
           <div>
-            <label>レビュー</label>
+            <label>レビュー</label><br/>
             <input 
+              className="input-review"
               type="text"
               {...register("review",{required:true})}
             />
-            {errors.review && <div>レビューを入力してください</div>}
+            {errors.review && <div className="error">レビューを入力してください</div>}
           </div>
           <div>
           <button id='review-submit' type="submit">投稿</button>
           </div>
         </form>
       </div>
-      :<p>投稿するにはログインが必要です。</p>}
+      :<p className="error">投稿するにはログインが必要です。</p>}
     </div>
   ) 
 }

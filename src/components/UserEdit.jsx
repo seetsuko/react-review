@@ -14,7 +14,7 @@ export const UserEdit = () => {
   const formData = new FormData()
   const navigation = useNavigate() 
   const [ cookie ] = useCookies()
-  const { register, handleSubmit,formState: {errors} } = useForm({defaultValues:{name:""}})
+  const { register, handleSubmit,reset,formState: {errors} } = useForm()
   const [ preview,setPreview ] = useState("")
   const [ file,setFile ] = useState("")
   const [ errorMessage,setErrorMessage ] = useState("") 

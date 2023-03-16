@@ -43,7 +43,7 @@ export const LogIn = () =>{
       { auth && <Navigate to ="/"/> }
       <Header/>
       <h2> ログイン</h2>
-      <p className='error-message'>{errorMessage}</p>
+      <p className="error">{errorMessage}</p>
       <form onSubmit={handleSubmit(onSubmit)} >
         <div id='test'>
           <label htmlFor="login-email">メールアドレス</label>
@@ -51,7 +51,7 @@ export const LogIn = () =>{
             id="login-email" 
             // バリデーション
             {...register("email",{required:true})}/>
-            {errors.email && <div>メールアドレスを入力してください</div>}
+            {errors.email && <div className="error">メールアドレスを入力してください</div>}
         </div>
         <div>
         <label htmlFor="login-password">パスワード</label> 
@@ -61,7 +61,7 @@ export const LogIn = () =>{
           // バリデーション
           {...register("password",{required:true})}
           />
-          {errors.password && <div>パスワードを入力してください</div>}
+          {errors.password && <div className="error">パスワードを入力してください</div>}
         </div>
         <div>
         <button id='submit' type="submit">ログイン</button>

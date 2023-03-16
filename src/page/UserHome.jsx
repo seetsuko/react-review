@@ -72,6 +72,18 @@ const handlePaginate = (page) =>{
   dispatch(pageQuery(page))
 }
 
+const log = (id) =>{
+  const bookID = {"selectBookId":id}
+  axios
+  .post(`${url}/logs`,bookID,{
+    headers: {
+    "Authorization": `Bearer ${cookie.token}`,
+    }})
+  .then((res)=>{
+    console.log("ログ送信")
+  })
+}
+
 return(
   <div className="main">
     <Header/>
@@ -99,7 +111,7 @@ return(
         {bookData.map((data) => {
           return(
           <li className="review-item" key={data.id}>
-            <Link to={`/detail/${data.id}`} state={{reviewID:data.id}}><p className="review-item__text">{data.title}</p></Link>
+            <Link onClick={()=>log(data.id)} to={`/detail/${data.id}`} state={{reviewID:data.id}}><p className="review-item__text">{data.title}</p></Link>
             <p className="review-item__text--detail">{data.review}</p>
           </li>
           )

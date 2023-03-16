@@ -78,7 +78,7 @@ export const SignUp = () =>{
       { auth && <Navigate to ="/"/> }
       <Header/>
       <h2> 新規登録</h2>
-      <p className='error-message'>{errorMessage}</p>
+      <p className="error">{errorMessage}</p>
       <form onSubmit={ handleSubmit(onSubmit) } >
       {/* ユーザアイコンも登録できるようにする */}
         <div>
@@ -101,7 +101,7 @@ export const SignUp = () =>{
             // バリデーション
             {...register("name",{required:true})}
             />
-            {errors.name && <div>ユーザー名を入力してください</div>}
+            {errors.name && <div className="error">ユーザー名を入力してください</div>}
         </div>
         <div >
           <label htmlFor="signup-email">メールアドレス</label>
@@ -110,7 +110,7 @@ export const SignUp = () =>{
             // バリデーション
             {...register("email",{required:true})}
             />
-            {errors.email && <div>メールアドレスを入力してください</div>}
+            {errors.email && <div className="error">メールアドレスを入力してください</div>}
         </div>
         <div>
         <label htmlFor="signup-password">パスワード</label> 
@@ -120,7 +120,7 @@ export const SignUp = () =>{
           // バリデーション
           {...register("password",{required:true})}
           />
-          {errors.password && <div>パスワードを入力してください</div>}
+          {errors.password && <div className="error">パスワードを入力してください</div>}
         </div>
         <div>
         <button id='signup-submit' type="submit">登録</button>
