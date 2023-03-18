@@ -46,7 +46,7 @@ export const DetailReview = () => {
     
     
     return(
-      <div className="main">
+      <div className="detail-main">
         <Header/>
         <h2>書籍レビュー詳細</h2>
         { load //ローディング中
@@ -55,26 +55,26 @@ export const DetailReview = () => {
             </div>
           
           : auth //ローディング終了後。ログインしているとき
-          ?<div className="container">
+          ?<div className="detail-container">
             {/* 投稿者の場合は表示 */}
-            {reviewData.isMine === true && <Link to={`/edit/${reviewID}`} state={{reviewID:reviewID}}>投稿内容を編集する</Link>} 
-            <div className="item">
+            {reviewData.isMine === true && <div className="edit-btn"><Link to={`/edit/${reviewID}`} state={{reviewID:reviewID}} className="edit-btn__link">投稿内容を編集する</Link></div>} 
+            <div className="detail-item">
               <h3>タイトル</h3>
                 <p>{reviewData.title}</p>
             </div>
-            <div className="item">
+            <div className="detail-item">
               <h3>URL</h3>
                 <a href={reviewData.url}>{reviewData.url}</a>
             </div>
-            <div className="item">
+            <div className="detail-item">
               <h3>本の内容</h3>
                 <p>{reviewData.detail}</p>
             </div>
-            <div className="item">
+            <div className="detail-item">
               <h3>感想</h3>
                 <p>{reviewData.review}</p>
             </div>
-            <div className="item">
+            <div className="detail-item">
               <h3>投稿者</h3>
                 <p>{reviewData.reviewer} さん</p>
             </div>

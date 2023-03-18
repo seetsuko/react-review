@@ -1,4 +1,5 @@
 import axios from "axios"
+import "./EditReview.css"
 import { useEffect, useState } from "react"
 import { useCookies } from "react-cookie"
 import { useForm } from "react-hook-form"
@@ -73,51 +74,53 @@ export const EditReview = () => {
   }
 
   return(
-    <div>
+    <div className="edit-main">
       <Header/>
       <h2>レビュー編集画面</h2>
-      <div>
+      <div className="edit-container">
         <p  className="error">{errorMessage}</p>
-        <form onSubmit={handleSubmit(onSubmit)} >
+        <form onSubmit={handleSubmit(onSubmit)} className="edit-form">
           <div>
-            <label>タイトル</label>
+            <label>タイトル</label><br/>
             <input 
+              className="edit-title"
               type="text"
               {...register("title",{required:true})}
             />
             {errors.title && <div className="error">タイトルを入力してください</div>}
           </div>
           <div>
-            <label>URL</label>
+            <label>URL</label><br/>
             <input 
+              className="edit-url"
               type="text"
               {...register("url",{required:true})}
             />
             {errors.url && <div className="error">URLを入力してください</div>}
           </div>
           <div>
-            <label>書籍の詳細</label>
-            <input 
+            <label>書籍の詳細</label><br/>
+            <textarea
+              className="edit-detail" 
               type="text"
               {...register("detail",{required:true})}
             />
             {errors.detail && <div className="error">書籍の詳細を入力してください</div>}
           </div>
           <div>
-            <label>レビュー</label>
-            <input 
+            <label>レビュー</label><br/>
+            <textarea
+              className="edit-review"
               type="text"
               {...register("review",{required:true})}
             />
             {errors.review && <div className="error">レビューを入力してください</div>}
           </div>
-          <div>
-          <button id='review-submit' type="submit">編集する</button>
-          </div>
-        </form>
-        <div className="delete-btn">
+          <div className="edit-delete-btn">
+          <button id='edit-submit' type="submit">編集する</button>
           <button id='delete-btn' className="error" onClick={handleDelete}>削除する</button>
         </div>
+        </form>
       </div>
     </div>
   )

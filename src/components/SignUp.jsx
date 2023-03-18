@@ -74,12 +74,12 @@ export const SignUp = () =>{
   }
 
   return (
-    <div>
+    <div className="main">
       { auth && <Navigate to ="/"/> }
       <Header/>
       <h2> 新規登録</h2>
       <p className="error">{errorMessage}</p>
-      <form onSubmit={ handleSubmit(onSubmit) } >
+      <form onSubmit={ handleSubmit(onSubmit) } className="user-form">
       {/* ユーザアイコンも登録できるようにする */}
         <div>
           <div>

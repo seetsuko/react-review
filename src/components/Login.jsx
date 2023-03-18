@@ -39,13 +39,13 @@ export const LogIn = () =>{
 
 
   return (
-    <div>
+    <div className='main'>
       { auth && <Navigate to ="/"/> }
       <Header/>
       <h2> ログイン</h2>
       <p className="error">{errorMessage}</p>
-      <form onSubmit={handleSubmit(onSubmit)} >
-        <div id='test'>
+      <form onSubmit={handleSubmit(onSubmit)} className="user-form">
+        <div>
           <label htmlFor="login-email">メールアドレス</label>
           <input
             id="login-email" 
@@ -66,9 +66,9 @@ export const LogIn = () =>{
         <div>
         <button id='submit' type="submit">ログイン</button>
         </div>
-        </form>
         {/* ユーザー作成画面へのリンクを配置する */}
         <Link to="/signup">ユーザー新規登録</Link>
+      </form>
     </div>
   )
 }

@@ -73,19 +73,21 @@ const handlePaginate = (page) =>{
 }
 
 const log = (id) =>{
-  const bookID = {"selectBookId":id}
-  axios
-  .post(`${url}/logs`,bookID,{
-    headers: {
-    "Authorization": `Bearer ${cookie.token}`,
-    }})
-  .then((res)=>{
-    console.log("ログ送信")
-  })
+  if(auth == true){
+    const bookID = {"selectBookId":id}
+    axios
+    .post(`${url}/logs`,bookID,{
+      headers: {
+      "Authorization": `Bearer ${cookie.token}`,
+      }})
+    .then((res)=>{
+      console.log("ログ送信")
+    })
+  }
 }
 
 return(
-  <div className="main">
+  <div className="home-main">
     <Header/>
     <div className="title">
       <h2 className="title__main">書籍一覧</h2>

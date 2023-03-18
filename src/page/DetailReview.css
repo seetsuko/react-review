@@ -1,25 +1,39 @@
-.main{
+.detail-main{
   text-align: center;
-}
-.container{
-  margin: 0 auto;
-  background-color:pink;
-  width: 80%;
-  border-radius: 20px;
-  padding: 30px;
 }
 .loading{
   text-align: center;
   width: 50px;
   margin: 50px auto;
 }
-.item{
-  background: rgba(247, 246, 237, 0.748);
+.detail-container{
+  margin: 0 auto;
+  background-color: lightgoldenrodyellow;
+  max-width: 1000px;
   border-radius: 10px;
+  padding: 30px;
+}
+.edit-btn{
+  text-align: center;
+  margin: 30px 0;
+} 
+.edit-btn__link{
+  text-decoration: none;
+  color: aliceblue;
+  background-color:lightcoral ;
+  box-shadow: 0 3px 5px #815858;
+  border-radius: 10px;
+  padding: 5px;
+  border:none;
+}
+.detail-item{
+  background: #fffae2;
+  width: 80%;
   padding: 10px;
-  margin: 10px;
+  margin: 10px auto;
   word-break: break-all;
-  font-size: 14px;
+  font-size: 16px;
+  border: solid 1px rgb(97, 71, 24);
 }
 .item__detail p{
   margin: 0;

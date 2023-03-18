@@ -4,7 +4,11 @@ header{
   display: flex;
   justify-content: space-between
 }
-
+.app-title{
+  text-decoration: none;
+  color: aliceblue;
+  text-shadow: 5px 5px 8px #343434;
+}
 .user{
   display: flex;
   justify-content: space-between;
@@ -31,10 +35,12 @@ header{
 .btn button{
   height: 30px;
   width: 80px;
-  border-radius: 8px;
+  border-radius:60px;
   background-color: blue;
-  color:whitesmoke;
+  box-shadow: 0 3px 0 #190f70;
+  color: #ffffffdf;
   font-size: 12px;
   margin-top: 10px;
   margin-bottom: 10px;
+  cursor: pointer;
 }

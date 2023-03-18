@@ -29,6 +29,7 @@ export const Header = () =>{
   }
 
   useEffect(()=>{
+    if(auth == true){
     axios
       .get(`${url}/users`,
         {headers: {
@@ -43,12 +44,13 @@ export const Header = () =>{
       .catch((err)=>{
         console.log(err)
       })
+    }
   },[])
 
 
   return(
     <header>
-      <Link to="/"><h1>書籍レビューアプリ</h1></Link>
+      <Link to="/" className="app-title"><h1>書籍レビューアプリ</h1></Link>
       
           {auth 
             ?( 

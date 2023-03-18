@@ -36,17 +36,17 @@ export const NewReview = () =>{
 
 
   return(
-    <div>
+    <div className="new-main">
       <Header/>
       <h2>レビュー投稿画面</h2>
       {auth 
-      ?<div>
+      ?<div className="new-container">
         <p  className="error">{errorMessage}</p>
-        <form onSubmit={handleSubmit(onSubmit)} className="container">
+        <form onSubmit={handleSubmit(onSubmit)} className="new-form">
           <div>
             <label>タイトル</label><br/>
             <input 
-              className="input-title"
+              className="new-title"
               type="text"
               {...register("title",{required:true})}
             />
@@ -54,8 +54,8 @@ export const NewReview = () =>{
           </div>
           <div>
             <label>URL</label><br/>
-            <input 
-              className="input-url"
+            <input
+              className="new-url"
               type="text"
               {...register("url",{required:true})}
             />
@@ -63,8 +63,8 @@ export const NewReview = () =>{
           </div>
           <div>
             <label>書籍の詳細</label><br/>
-            <input 
-              className="input-detail"
+            <textarea 
+              className="new-detail"
               type="text"
               {...register("detail",{required:true})}
             />
@@ -72,15 +72,15 @@ export const NewReview = () =>{
           </div>
           <div>
             <label>レビュー</label><br/>
-            <input 
-              className="input-review"
+            <textarea 
+              className="new-review"
               type="text"
               {...register("review",{required:true})}
             />
             {errors.review && <div className="error">レビューを入力してください</div>}
           </div>
-          <div>
-          <button id='review-submit' type="submit">投稿</button>
+          <div className="submit-btn">
+          <button id='review-submit' type="submit">投稿する</button>
           </div>
         </form>
       </div>
