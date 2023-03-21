@@ -60,7 +60,7 @@ export const Header = () =>{
                   <p>{userName}</p><br/>
                 </div>
                 <div className="btn">
-                    <button onClick={handleSignOut}>ログアウト</button>
+                    <button onClick={handleSignOut}>ログアウト</button><br/>
                     {home && <Link to="/profile" className="edit">ユーザー編集</Link>}
                 </div>
               </div>
